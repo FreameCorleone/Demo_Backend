@@ -12,6 +12,7 @@ import br.edu.ifba.demo.backend.api.model.LivroModel;
 import br.edu.ifba.demo.backend.api.repository.LivroRepository;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:8080")
 @RequestMapping("/livros")
 public class LivroController {
 
@@ -70,4 +71,34 @@ public class LivroController {
         }
         return ResponseEntity.ok(LivroDTO.converter(livros));
     }
+    
+    @PutMapping("/{id}")
+public ResponseEntity<LivroModel> atualizarLivro(@PathVariable Long id, @RequestBody LivroModel livroAtualizado) {
+    // Verifica se o livro existe no banco
+    if (!livroRepository.existsById(id)) {
+        return ResponseEntity.notFound().build(); // Retorna 404 caso não encontre o livro
+    }
+
+    // Busca o livro atual no banco de dados
+    LivroModel livroExistente = livroRepository.findById(id).get();
+
+    // Atualiza os dados do livro existente com os dados fornecidos
+    livroExistente.setTitulo(livroAtualizado.getTitulo());
+    livroExistente.setAutor(livroAtualizado.getAutor());
+    livroExistente.setGenero(livroAtualizado.getGenero());
+    livroExistente.setIdioma(livroAtualizado.getIdioma());
+    livroExistente.setPreco(livroAtualizado.getPreco());
+    livroExistente.setNum_paginas(livroAtualizado.getNum_paginas());
+    livroExistente.setData_cadastro(livroAtualizado.getData_cadastro());
+    livroExistente.setEditora(livroAtualizado.getEditora());
+    livroExistente.setAno_publicacao(livroAtualizado.getAno_publicacao());
+    livroExistente.setIsbn(livroAtualizado.getIsbn());
+    livroExistente.setSinopse(livroAtualizado.getSinopse());
+
+    // Salva o livro atualizado
+    LivroModel livroSalvo = livroRepository.save(livroExistente);
+
+    return ResponseEntity.ok(livroSalvo); // Retorna o livro atualizado
+}
+    
 }

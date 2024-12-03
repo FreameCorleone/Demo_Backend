@@ -16,7 +16,7 @@ public class LivroDTO implements Serializable {
     private Integer anoPublicacao;
     private String genero;
     private String isbn;
-    private Integer numPaginas;
+    private Integer num_paginas;
     private String sinopse;
     private String idioma;
     private Timestamp dataCadastro;
@@ -28,7 +28,7 @@ public class LivroDTO implements Serializable {
     }
 
     public LivroDTO(Long idLivro, String titulo, String autor, String editora, Integer anoPublicacao, String genero,
-                    String isbn, Integer numPaginas, String sinopse, String idioma, Timestamp dataCadastro, Double preco) {
+                    String isbn, Integer num_paginas, String sinopse, String idioma, Timestamp dataCadastro, Double preco) {
         this.idLivro = idLivro;
         this.titulo = titulo;
         this.autor = autor;
@@ -36,7 +36,7 @@ public class LivroDTO implements Serializable {
         this.anoPublicacao = anoPublicacao;
         this.genero = genero;
         this.isbn = isbn;
-        this.numPaginas = numPaginas;
+        this.num_paginas = num_paginas;
         this.sinopse = sinopse;
         this.idioma = idioma;
         this.dataCadastro = dataCadastro;
@@ -100,12 +100,12 @@ public class LivroDTO implements Serializable {
         this.isbn = isbn;
     }
 
-    public Integer getNumPaginas() {
-        return numPaginas;
+    public Integer getNum_paginas() {
+        return num_paginas;
     }
 
-    public void setNumPaginas(Integer numPaginas) {
-        this.numPaginas = numPaginas;
+    public void setNum_paginas(Integer num_paginas) {
+        this.num_paginas = num_paginas;
     }
 
     public String getSinopse() {
@@ -150,7 +150,7 @@ public class LivroDTO implements Serializable {
         livro.setAnoPublicacao(model.getAno_publicacao());
         livro.setGenero(model.getGenero());
         livro.setIsbn(model.getIsbn());
-        livro.setNumPaginas(model.getNum_paginas());
+        livro.setNum_paginas(model.getNum_paginas());
         livro.setSinopse(model.getSinopse());
         livro.setIdioma(model.getIdioma());
         livro.setDataCadastro(model.getData_cadastro());

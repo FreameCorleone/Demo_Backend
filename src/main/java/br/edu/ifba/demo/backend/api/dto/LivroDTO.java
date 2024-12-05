@@ -13,7 +13,7 @@ public class LivroDTO implements Serializable {
     private String titulo;
     private String autor;
     private String editora;
-    private Integer anoPublicacao;
+    private Integer ano_publicacao;
     private String genero;
     private String isbn;
     private Integer num_paginas;
@@ -27,13 +27,13 @@ public class LivroDTO implements Serializable {
         super();
     }
 
-    public LivroDTO(Long idLivro, String titulo, String autor, String editora, Integer anoPublicacao, String genero,
+    public LivroDTO(Long idLivro, String titulo, String autor, String editora, Integer ano_publicacao, String genero,
                     String isbn, Integer num_paginas, String sinopse, String idioma, Timestamp dataCadastro, Double preco) {
         this.idLivro = idLivro;
         this.titulo = titulo;
         this.autor = autor;
         this.editora = editora;
-        this.anoPublicacao = anoPublicacao;
+        this.ano_publicacao = ano_publicacao;
         this.genero = genero;
         this.isbn = isbn;
         this.num_paginas = num_paginas;
@@ -76,12 +76,12 @@ public class LivroDTO implements Serializable {
         this.editora = editora;
     }
 
-    public Integer getAnoPublicacao() {
-        return anoPublicacao;
+    public Integer getano_publicacao() {
+        return ano_publicacao;
     }
 
-    public void setAnoPublicacao(Integer anoPublicacao) {
-        this.anoPublicacao = anoPublicacao;
+    public void setano_publicacao(Integer ano_publicacao) {
+        this.ano_publicacao = ano_publicacao;
     }
 
     public String getGenero() {
@@ -147,7 +147,7 @@ public class LivroDTO implements Serializable {
         livro.setTitulo(model.getTitulo());
         livro.setAutor(model.getAutor());
         livro.setEditora(model.getEditora());
-        livro.setAnoPublicacao(model.getAno_publicacao());
+        livro.setano_publicacao(model.getAno_publicacao());
         livro.setGenero(model.getGenero());
         livro.setIsbn(model.getIsbn());
         livro.setNum_paginas(model.getNum_paginas());

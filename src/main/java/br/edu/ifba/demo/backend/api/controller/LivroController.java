@@ -1,6 +1,7 @@
 package br.edu.ifba.demo.backend.api.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,23 +24,21 @@ public class LivroController {
     @PostMapping
     public ResponseEntity<LivroModel> addLivro(@RequestBody LivroModel livro) {
         LivroModel savedLivro = livroRepository.save(livro);
-        return new ResponseEntity<>(savedLivro, HttpStatus.CREATED);
+        return ResponseEntity.status(201).body(savedLivro);
     }
 
     // Listar todos os livros
     @GetMapping("/listall")
-    public List<LivroModel> listall() {
+    public List<LivroModel> listAll() {
         return livroRepository.findAll();
     }
 
     // Buscar livro por ID
     @GetMapping("/{id}")
     public ResponseEntity<LivroDTO> buscarPorId(@PathVariable Long id) {
-        var livro = livroRepository.findById(id);
-        if (livro.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(LivroDTO.converter(livro.get()));
+        return livroRepository.findById(id)
+            .map(livro -> ResponseEntity.ok(LivroDTO.converter(livro)))
+            .orElse(ResponseEntity.notFound().build());
     }
 
     // Deletar livro por ID
@@ -55,50 +54,43 @@ public class LivroController {
     // Buscar livro por ISBN
     @GetMapping("/isbn/{isbn}")
     public ResponseEntity<LivroDTO> buscarPorISBN(@PathVariable String isbn) {
-        var livro = livroRepository.findByIsbn(isbn);
-        if (livro == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(LivroDTO.converter(livro));
+        LivroModel livro = livroRepository.findByIsbn(isbn);
+        return (livro != null) ? ResponseEntity.ok(LivroDTO.converter(livro))
+                               : ResponseEntity.notFound().build();
     }
 
     // Buscar livro por título
     @GetMapping("/titulo/{titulo}")
     public ResponseEntity<List<LivroDTO>> buscarPorTitulo(@PathVariable String titulo) {
-        var livros = livroRepository.findByTituloContainingIgnoreCase(titulo);
-        if (livros.isEmpty()) {
+        List<LivroModel> livros = livroRepository.findByTituloContainingIgnoreCase(titulo);
+        return livros.isEmpty() ? ResponseEntity.notFound().build()
+                                : ResponseEntity.ok(LivroDTO.converter(livros));
+    }
+
+    // Atualizar um livro por ID
+    @PutMapping("/{id}")
+    public ResponseEntity<LivroModel> atualizarLivro(@PathVariable Long id, @RequestBody LivroModel livroAtualizado) {
+        Optional<LivroModel> optionalLivro = livroRepository.findById(id);
+
+        if (optionalLivro.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(LivroDTO.converter(livros));
+
+        LivroModel livroExistente = optionalLivro.get();
+        livroExistente.setTitulo(livroAtualizado.getTitulo());
+        livroExistente.setAutor(livroAtualizado.getAutor());
+        livroExistente.setGenero(livroAtualizado.getGenero());
+        livroExistente.setIdioma(livroAtualizado.getIdioma());
+        livroExistente.setPreco(livroAtualizado.getPreco());
+        livroExistente.setNumPaginas(livroAtualizado.getNumPaginas());
+        livroExistente.setDataCadastro(livroAtualizado.getDataCadastro());
+        livroExistente.setEditora(livroAtualizado.getEditora());
+        livroExistente.setAnoPublicacao(livroAtualizado.getAnoPublicacao());
+        livroExistente.setIsbn(livroAtualizado.getIsbn());
+        livroExistente.setSinopse(livroAtualizado.getSinopse());
+
+        LivroModel livroSalvo = livroRepository.save(livroExistente);
+
+        return ResponseEntity.ok(livroSalvo);
     }
-    
-    @PutMapping("/{id}")
-public ResponseEntity<LivroModel> atualizarLivro(@PathVariable Long id, @RequestBody LivroModel livroAtualizado) {
-    // Verifica se o livro existe no banco
-    if (!livroRepository.existsById(id)) {
-        return ResponseEntity.notFound().build(); // Retorna 404 caso não encontre o livro
-    }
-
-    // Busca o livro atual no banco de dados
-    LivroModel livroExistente = livroRepository.findById(id).get();
-
-    // Atualiza os dados do livro existente com os dados fornecidos
-    livroExistente.setTitulo(livroAtualizado.getTitulo());
-    livroExistente.setAutor(livroAtualizado.getAutor());
-    livroExistente.setGenero(livroAtualizado.getGenero());
-    livroExistente.setIdioma(livroAtualizado.getIdioma());
-    livroExistente.setPreco(livroAtualizado.getPreco());
-    livroExistente.setNum_paginas(livroAtualizado.getNum_paginas());
-    livroExistente.setData_cadastro(livroAtualizado.getData_cadastro());
-    livroExistente.setEditora(livroAtualizado.getEditora());
-    livroExistente.setAno_publicacao(livroAtualizado.getAno_publicacao());
-    livroExistente.setIsbn(livroAtualizado.getIsbn());
-    livroExistente.setSinopse(livroAtualizado.getSinopse());
-
-    // Salva o livro atualizado
-    LivroModel livroSalvo = livroRepository.save(livroExistente);
-
-    return ResponseEntity.ok(livroSalvo); // Retorna o livro atualizado
-}
-    
 }

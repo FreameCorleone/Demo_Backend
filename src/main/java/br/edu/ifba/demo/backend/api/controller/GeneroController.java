@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 
 import br.edu.ifba.demo.backend.api.dto.GeneroDTO;
 import br.edu.ifba.demo.backend.api.model.GeneroModel;
+import br.edu.ifba.demo.backend.api.model.LivroModel;
 import br.edu.ifba.demo.backend.api.repository.GeneroRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -13,6 +14,7 @@ import java.util.stream.Collectors;
 
 
 @RestController
+@CrossOrigin(origins = "http://localhost:8080")
 @RequestMapping("/generos")
 @RequiredArgsConstructor
 public class GeneroController {
@@ -63,4 +65,14 @@ public class GeneroController {
         }
         return ResponseEntity.notFound().build();
     }
+
+    @GetMapping("/listall")
+public ResponseEntity<List<GeneroDTO>> listAll() {
+    List<GeneroDTO> lista = generoRepository.findAll()
+            .stream()
+            .map(GeneroDTO::converter)
+            .collect(Collectors.toList());
+    return ResponseEntity.ok(lista);
+}
+
 }
